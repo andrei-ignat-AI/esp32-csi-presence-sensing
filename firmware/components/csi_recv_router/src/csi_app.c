@@ -20,7 +20,8 @@
 #include "protocol_examples_common.h"
 #include "esp_attr.h"
 
-// =============== AT THE BOTTOM OF THIS CODE YOU FIND THE MODIFIED UPSTREAM CODE THAT FETCHES THE NUMBER OF PEOPLE AND THE CONFIDENCE SCORES. MORE DETAILS THERE =============== //
+// The modified upstream detector code (who_detect_lcd.cpp) that supplies the people count
+// and confidence score is included, commented out, at the bottom of this file.
 
 #define MOUNT_POINT     "/sdcard"
 #define CSI_QUEUE_LEN   16        // small queue to save heap memory
@@ -28,7 +29,7 @@
 
 static const char *TAG = "csi_recv_router";
 
-// detection metadata, sstolen from who_detect_lcd.cpp via the setter functions below
+// detection metadata, set from who_detect_lcd.cpp via the setter functions below
 // marked 'volatile' because they are changed by another task
 
 static volatile int      s_detection_flag   = 0;
@@ -62,7 +63,8 @@ static FILE            * csi_file       = NULL;
 static bool              header_written = false;
 
 // internal: mount sd card
-// these specific settings were required to get the sd card to mount reliably. if you change anything it might not ever work LOL. the official instructions given by espressif just won't work.
+// these settings (1-bit bus, 10 MHz clock, internal pull-ups, no card-detect pin) were required
+// for reliable mounting on the ESP32-S3-EYE; the default configuration did not mount reliably.
 static esp_err_t init_sd_card(void)
 {
     ESP_LOGI(TAG, "Initializing SD card...");
@@ -385,11 +387,11 @@ esp_err_t wifi_ping_router_start(void)
 
 
 
-// HERE IS THE MODIFIED WHO_DETECT_LCD.CPP UPSTREAM CODE. THIS IS ONE OF THE STANDARD CODES OF THE PERSON DETECTOR. I TAPPED INTO IT SUCH THAT I GET ACCESS INTO THE BRAINS OF THE DETECTOR. 
-// MORE DETAILS INSIDE README.md
-// YOU HAVE TO LOCATE WHERE THIS SOURCE FILE IS ON YOUR COMPUTER AND REPLACE IT WITH WHAT IS BELOW:
-// PATH WILL BE INSIDE THE ESP-WHO REPOSITORY, LIKE ../esp-who/components/who_detect
-// WITHOUT THIS, CSV FILES WILL NEVER HAVE THE PEOPLE COUNT OR THE CONFIDENCE SCORE
+// Modified version of esp-who's who_detect_lcd.cpp (person detector component).
+// It forwards each detection result (people count, frame timestamp, mean confidence)
+// to the CSI logger through the csi_set_* functions above. See firmware/HANDOVER.md.
+// To use it, replace esp-who/components/who_detect/src/who_detect_lcd.cpp with the code below;
+// without it, the CSV files contain no people count or confidence score.
 
 // #include "who_detect_lcd.hpp"
 // #include "who_detect_utils.hpp"
@@ -421,7 +423,7 @@ esp_err_t wifi_ping_router_start(void)
 // // this function is called every time the model produces a new detection result
 // void WhoDetectLCD::on_new_detect_result(const result_t &result)
 // {
-//     // 1) steal the result for drawing (unchanged from original)
+//     // 1) store the result for drawing (unchanged from original)
 //     xSemaphoreTake(m_res_mutex, portMAX_DELAY);
 //       m_results.push(result);
 //     xSemaphoreGive(m_res_mutex);

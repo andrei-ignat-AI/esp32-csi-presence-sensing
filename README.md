@@ -4,9 +4,9 @@ Individual BSc end project, Electrical Engineering, Eindhoven University of Tech
 
 Wi-Fi channel state information (CSI) can detect whether a person is in a room without a camera, but training a model normally needs a lot of manual labelling. This project runs both on one low-cost ESP32-S3: the board records raw CSI from the room's router while its on-board camera person detector labels the same moments automatically. A Python pipeline then trains a presence classifier and compares automatic labels with manual ground truth.
 
-Paper: [`docs/paper.pdf`](docs/paper.pdf) · Presentation: [`docs/presentation.pdf`](docs/presentation.pdf)
+Paper: [`docs/paper.pdf`](docs/paper.pdf) · Official assessment: [`docs/bep-assessment.pdf`](docs/bep-assessment.pdf)
 
-## What I built
+## How it works
 
 **Firmware: C/C++, ESP-IDF 5.4, FreeRTOS on ESP32-S3-EYE (`firmware/`)**
 - Captures raw CSI only from the connected access point (BSSID filter in the CSI callback).
@@ -33,10 +33,11 @@ Paper: [`docs/paper.pdf`](docs/paper.pdf) · Presentation: [`docs/presentation.p
 | `firmware/main/` | Application entry (`app_main.cpp`) and FAT timestamp helper. |
 | `firmware/components/csi_recv_router/` | CSI capture, synchronisation and SD logging (`csi_app.c`). The modified upstream detector hook is at the bottom of this file. |
 | `firmware/components/{lwip,ping,protocol_examples_common,sd_card}/` | Third-party components from Espressif / lwIP, kept under their own licences. |
-| `analysis/notebooks/` | One self-contained notebook per labelling strategy (`ABC1` forced ground truth, `XYZ2` raw detector, `XYZ2_filtered` confidence-filtered). |
+| `analysis/notebooks/` | One self-contained notebook per labelling strategy: forced ground truth, raw detector labels, confidence-filtered detector labels. |
 | `analysis/csi_preprocessing/` | Helper module (cleaning, config, plotting). |
 | `analysis/data/raw_data_sample/` | One sample recording per class and device placement. The full dataset (48 recordings, ~150k CSI records, ~50 MB) is available on request. |
 | `analysis/saved_models/`, `analysis/plots/` | Trained models and evaluation plots per experiment. |
+| `docs/` | Paper and official BEP assessment. |
 
 ## Build the firmware
 

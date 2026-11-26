@@ -1,0 +1,33 @@
+{
+  "data_dir": "data",
+  "raw_data_subdir": "raw_data",
+  "models_storage_base_dir": "saved_models",
+  "plots_base_dir": "plots",
+
+  "raw_data_categories": {
+    "0_persons": {
+      "left": "0_pers/left",
+      "right": "0_pers/right"
+    },
+    "1_person": {
+      "left": "1_pers/left",
+      "right": "1_pers/right"
+    }
+  },
+
+  "csi_metadata_columns": ["people", "conf", "csi ts", "det ts"],
+  "target_label_column": "people", 
+
+  "dead_subcarrier_indices": [1,2,3,4,5,6,33,60,61,62,63,64],
+
+  "experiment_pipelines": {
+    "ground_truth_labels": {
+      "pipeline_suffix": "gt",
+      "description": "uses forced 0/1 labels based on raw_data folder structure."
+    },
+    "detector_labels": {
+      "pipeline_suffix": "noisy_detector",
+      "description": "uses 'people' column from raw CSV, mapped to binary (0 vs non-zero) during windowing."
+    }
+  }
+}

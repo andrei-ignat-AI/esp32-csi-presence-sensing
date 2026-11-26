@@ -1,0 +1,13 @@
+# ESP-IDF build output and downloaded dependencies
+build/
+firmware/managed_components/
+# Local configs can contain Wi-Fi credentials: set them with `idf.py menuconfig`
+firmware/sdkconfig
+firmware/sdkconfig.old
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+analysis/experiment_outputs*/
+analysis/data/raw_data/
+.DS_Store

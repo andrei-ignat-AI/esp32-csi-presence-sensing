@@ -1,0 +1,35 @@
+# ─────────── Disable IPv6 everywhere ───────────
+CONFIG_EXAMPLE_CONNECT_IPV6=n
+CONFIG_LWIP_IPV6=n
+CONFIG_LWIP_ND6=n
+
+CONFIG_LWIP_DHCPS=n
+CONFIG_LWIP_DHCP=n
+CONFIG_LWIP_SNTP=n
+
+# ─────────── Offload Wi-Fi/LWIP into PSRAM ───────────
+# let lwIP try to grab buffers from SPIRAM first
+CONFIG_SPIRAM_TRY_ALLOCATE_WIFI_LWIP=y
+
+# ─────────── Turn off unneeded Wi-Fi features ───────────
+# you only ever do STA + CSI, no enterprise or SoftAP needed
+CONFIG_ESP_WIFI_ENTERPRISE_SUPPORT=n
+CONFIG_ESP_WIFI_SOFTAP_SUPPORT=n
+
+# ─────────── Drop HTTPS client code ───────────
+# example_connect doesn’t need mbedTLS or HTTP
+CONFIG_ESP_HTTP_CLIENT_ENABLE_HTTPS=n
+
+# ─────────── Kill GDB stub entirely ───────────
+CONFIG_ESP_GDBSTUB_ENABLED=n
+
+# ─────────── Shrink lwIP/TCPIP task stack ───────────
+CONFIG_LWIP_TCPIP_TASK_STACK_SIZE=2048
+
+CONFIG_SDMMC_USE_DMA=n
+
+CONFIG_FREERTOS_GENERATE_RUN_TIME_STATS=y
+CONFIG_FREERTOS_USE_TRACE_Facilities=y
+
+
+## these changes are desperate attempts to stop the errors by killing what is not necessary ##
